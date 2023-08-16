@@ -1,48 +1,54 @@
-import { useState } from 'react';
+import  { useState } from 'react';
 
 function DateCalculator() {
-  const [startDate, setStartDate] = useState('');
-  const [endDate, setEndDate] = useState('');
+  const [startMonthYear, setStartMonthYear] = useState('');
+  const [endMonthYear, setEndMonthYear] = useState('');
   const [result, setResult] = useState(null);
 
   const calculateDateDifference = () => {
-    const start = new Date(startDate);
-    const end = new Date(endDate);
+    const [startYear, startMonth] = startMonthYear.split('-');
+    const [endYear, endMonth] = endMonthYear.split('-');
 
-    const timeDifference = end - start;
-    const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+    const startDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, 1);
+    const endDate = new Date(parseInt(endYear), parseInt(endMonth), 1);
 
-    const years = Math.floor(days / 365);
-    const remainingDaysAfterYears = days % 365;
+    const years = endDate.getFullYear() - startDate.getFullYear();
+    const months = endDate.getMonth() - startDate.getMonth();
+    
+    const startDateCopy = new Date(startDate);
+    const days = Math.floor((endDate - startDateCopy) / (1000 * 60 * 60 * 24));
 
-    const months = Math.floor(remainingDaysAfterYears / 30);
-    const remainingDays = remainingDaysAfterYears % 30;
-
-    setResult({ years, months, days: remainingDays });
+    setResult({ years, months, days });
   };
 
   return (
     <div>
       <h2>Date Calculator</h2>
       <div>
-        <label>Start Date: </label>
-        <input type="month" value={startDate} onChange={(e) => setStartDate(e.target.value)} style={{ marginTop: '20px'}}/>
+        <label>Start Month and Year: </label>
+        <input
+          type="month"
+          value={startMonthYear}
+          onChange={(e) => setStartMonthYear(e.target.value)}
+        />
       </div>
       <div>
-        <label>End Date: </label>
-        <input type="month" value={endDate} onChange={(e) => setEndDate(e.target.value)} style={{ marginTop: '20px' }}/>
+        <label>End Month and Year: </label>
+        <input
+          type="month"
+          value={endMonthYear}
+          onChange={(e) => setEndMonthYear(e.target.value)}
+        />
       </div>
-      <button onClick={calculateDateDifference} style={{ marginTop: '20px' }}>Calculate</button>
+      <button onClick={calculateDateDifference} style={{ marginTop: '10px' }}>
+        Calculate
+      </button>
       {result && (
         <div>
           <p>Years: {result.years}</p>
           <p>Months: {result.months}</p>
-          <p>Days: {result.days}</p>
         </div>
       )}
-      <div style={{ position: 'absolute', bottom: 10, left: '50%', transform: 'translateX(-50%)' }}>
-        Develop by Yeelang Yang (Full-Stack Developer)
-      </div>
     </div>
   );
 }
