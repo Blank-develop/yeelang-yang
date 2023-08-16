@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { differenceInMonths, format, parse } from 'date-fns';
+import  { useState } from 'react';
+import { differenceInMonths, parse, addMonths } from 'date-fns';
 
 function DateCalculator() {
   const [startMonthYear, setStartMonthYear] = useState('');
@@ -14,7 +14,14 @@ function DateCalculator() {
     const years = Math.floor(months / 12);
     const remainingMonths = months % 12;
 
-    setResult({ years, months: remainingMonths });
+    const totalMonths = years * 12 + remainingMonths + 1;
+
+    const calculatedDate = addMonths(start, totalMonths);
+
+    setResult({
+      years: calculatedDate.getFullYear() - start.getFullYear(),
+      months: calculatedDate.getMonth() - start.getMonth(),
+    });
   };
 
   return (
