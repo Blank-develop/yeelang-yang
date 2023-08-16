@@ -1,4 +1,5 @@
-import  { useState } from 'react';
+import { useState } from 'react';
+import { differenceInMonths, format, parse } from 'date-fns';
 
 function DateCalculator() {
   const [startMonthYear, setStartMonthYear] = useState('');
@@ -6,19 +7,14 @@ function DateCalculator() {
   const [result, setResult] = useState(null);
 
   const calculateDateDifference = () => {
-    const [startYear, startMonth] = startMonthYear.split('-');
-    const [endYear, endMonth] = endMonthYear.split('-');
+    const start = parse(startMonthYear, 'yyyy-MM', new Date());
+    const end = parse(endMonthYear, 'yyyy-MM', new Date());
 
-    const startDate = new Date(parseInt(startYear), parseInt(startMonth) - 1, 1);
-    const endDate = new Date(parseInt(endYear), parseInt(endMonth), 1);
+    const months = differenceInMonths(end, start);
+    const years = Math.floor(months / 12);
+    const remainingMonths = months % 12;
 
-    const years = endDate.getFullYear() - startDate.getFullYear();
-    const months = endDate.getMonth() - startDate.getMonth();
-    
-    const startDateCopy = new Date(startDate);
-    const days = Math.floor((endDate - startDateCopy) / (1000 * 60 * 60 * 24));
-
-    setResult({ years, months, days });
+    setResult({ years, months: remainingMonths });
   };
 
   return (
